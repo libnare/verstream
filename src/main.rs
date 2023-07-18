@@ -65,6 +65,8 @@ async fn serve(key: web::Path<String>, client: Data<Client>) -> impl Responder {
             }
             if let Some(content_type) = stream.content_type() {
                 response.insert_header(("Content-Type", content_type));
+            } else {
+                response.insert_header(("Content-Type", "application/octet-stream"));
             }
             response.streaming(stream.body)
         }
