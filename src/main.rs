@@ -30,7 +30,7 @@ fn check_env_var(var_name: &str) {
 }
 
 fn get_bind_address() -> IpAddr {
-    let bind_address = env::var("SERVER_ADDRESS")
+    let bind_address = env::var("ADDRESS")
         .unwrap_or_else(|_| String::from("127.0.0.1"));
 
     IpAddr::from_str(&bind_address)
@@ -118,7 +118,7 @@ async fn main() -> std::io::Result<()> {
     let client = Client::new(&shared_config);
 
     let bind_address = get_bind_address();
-    let bind_port = env::var("BIND_PORT")
+    let bind_port = env::var("PORT")
         .unwrap_or_else(|_| String::from("8080"))
         .parse::<u16>()
         .expect("Invalid port number");

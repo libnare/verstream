@@ -1,9 +1,9 @@
 # verstream
 
 ## Environment
-`SERVER_ADDRESS` - Server address (default: 127.0.0.1)
+`ADDRESS` - Server address (default: 127.0.0.1)
 <br>
-`BIND_PORT` - Server port (default: 8080)
+`PORT` - Server port (default: 8080)
 <br>
 `AWS_BUCKET` - S3 bucket name (required)
 <br>
