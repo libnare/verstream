@@ -31,10 +31,10 @@ fn check_env_var(var_name: &str) {
 
 fn get_bind_address() -> IpAddr {
     let bind_address = env::var("ADDRESS")
-        .unwrap_or_else(|_| String::from("127.0.0.1"));
+        .unwrap_or_else(|_| String::from("0.0.0.0"));
 
     IpAddr::from_str(&bind_address)
-        .unwrap_or_else(|_| IpAddr::from_str("127.0.0.1").unwrap())
+        .unwrap_or_else(|_| IpAddr::from_str("0.0.0.0").unwrap())
 }
 
 async fn get_object(client: &Client, opt: Opt) -> Result<GetObjectOutput, anyhow::Error> {

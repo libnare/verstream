@@ -1,7 +1,7 @@
 # verstream
 
 ## Environment
-`ADDRESS` - Server address (default: 127.0.0.1)
+`ADDRESS` - Server address (default: 0.0.0.0)
 <br>
 `PORT` - Server port (default: 8080)
 <br>
