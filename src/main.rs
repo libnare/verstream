@@ -7,8 +7,8 @@ use actix_web::http::StatusCode;
 use actix_web::web::Data;
 use aws_config::meta::region::RegionProviderChain;
 use aws_sdk_s3::Client;
+use aws_sdk_s3::operation::get_object::GetObjectOutput;
 use env_logger::Env;
-use futures_util::{Stream, TryStreamExt};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug)]
@@ -37,7 +37,7 @@ fn get_bind_address() -> IpAddr {
         .unwrap_or_else(|_| IpAddr::from_str("127.0.0.1").unwrap())
 }
 
-async fn get_object(client: &Client, opt: Opt) -> Result<impl Stream<Item=Result<bytes::Bytes, anyhow::Error>>, anyhow::Error> {
+async fn get_object(client: &Client, opt: Opt) -> Result<GetObjectOutput, anyhow::Error> {
     let object = client
         .get_object()
         .bucket(opt.bucket)
@@ -45,7 +45,7 @@ async fn get_object(client: &Client, opt: Opt) -> Result<impl Stream<Item=Result
         .send()
         .await?;
 
-    Ok(object.body.map_err(Into::into))
+    Ok(object)
 }
 
 #[get("/{tail:.*}")]
@@ -63,8 +63,11 @@ async fn serve(key: web::Path<String>, client: Data<Client>) -> impl Responder {
                     response.insert_header(("Cache-Control", "public, max-age=31536000"));
                 }
             }
-            response.streaming(stream)
-        },
+            if let Some(content_type) = stream.content_type() {
+                response.insert_header(("Content-Type", content_type));
+            }
+            response.streaming(stream.body)
+        }
         Err(err) => {
             let root_cause = err.root_cause();
             log::error!("Error retrieving object: {}", root_cause);
