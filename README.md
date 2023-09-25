@@ -11,9 +11,9 @@
 <br>
 `AWS_ENDPOINT` - S3 endpoint (optional)
 <br>
-`AWS_ACCESS_KEY_ID` - S3 Access key (optional)
+`AWS_ACCESS_KEY_ID` - S3 Access key (required)
 <br>
-`AWS_SECRET_ACCESS_KEY` S3 Secret key (optional)
+`AWS_SECRET_ACCESS_KEY` S3 Secret key (required)
 <br>
 `HEADER_CC_1Y` - Add header `Cache-Control: public, max-age=31536000` (optional)
 

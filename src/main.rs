@@ -98,7 +98,7 @@ async fn index() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
-    let env_vars = &["AWS_ENDPOINT", "AWS_BUCKET"];
+    let env_vars = &["AWS_BUCKET"];
 
     for var in env_vars {
         check_env_var(var);
@@ -111,15 +111,17 @@ async fn main() -> std::io::Result<()> {
         panic!("Either both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be set or neither.");
     }
 
-    let endpoint = env::var("AWS_ENDPOINT").ok();
-
     let region_provider = RegionProviderChain::default_provider().or_else("us-east-1");
 
-    let shared_config = aws_config::from_env()
-        .region(region_provider)
-        .endpoint_url(endpoint.unwrap_or_default())
-        .load()
-        .await;
+    let mut config_builder = aws_config::from_env()
+        .region(region_provider);
+
+    if let Ok(endpoint_value) = env::var("AWS_ENDPOINT") {
+        config_builder = config_builder.endpoint_url(endpoint_value);
+    }
+
+    let shared_config = config_builder.load().await;
+
     let client = Client::new(&shared_config);
 
     let bind_address = get_bind_address();
