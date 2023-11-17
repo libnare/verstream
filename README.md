@@ -19,5 +19,5 @@
 
 ## Docker Image
 ```docker
-asia-docker.pkg.dev/libnare/verstream/main:latest
+cr.libnare.net/verstream/main:latest
 ```
